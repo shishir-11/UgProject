@@ -1,6 +1,5 @@
 from sklearn.datasets import load_breast_cancer, load_wine,load_digits,load_iris,make_classification, fetch_covtype
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
-
 class LoadData:
     def __init__(self,scaler=None,dataset=''):
         self.scaler = scaler

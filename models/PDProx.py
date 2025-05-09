@@ -1,4 +1,4 @@
-from stand import Model
+from models.stand import Model
 import numpy as np
 
 class PDProx(Model):
@@ -61,3 +61,6 @@ class PDProx(Model):
     def predict(self, X):
         y_pred = np.sign(X @ self.w)
         return y_pred
+
+    def weight_sparsity(self, tol=1e-3):
+        return np.sum(np.abs(self.w) < tol) / len(self.w)

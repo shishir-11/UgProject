@@ -17,5 +17,7 @@ class LoadMetric:
         self.metric = met_dict[self.type]
 
     def get_score(self,y_test,y_pred):
+        if(self.type=='accuracy'):
+            return self.metric(y_test,y_pred)    
         return self.metric(y_test,y_pred,average=self.average)
     

@@ -4,17 +4,17 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import numpy as np
 
-# data = load_breast_cancer()
-# X,y = data.data,data.target
+data = load_breast_cancer()
+X,y = data.data,data.target
 scaler = StandardScaler()
-# X = scaler.fit_transform(X)
-# y = 2*y-1
+X = scaler.fit_transform(X)
+y = 2*y-1
 # X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=42)
 
-X,y = make_classification(n_samples=10000, n_features=50, n_classes=2)
-y = 2*y-1
-X = scaler.fit_transform(X)
-X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=42)
+# X,y = make_classification(n_samples=10000, n_features=50, n_classes=2)
+# y = 2*y-1
+# X = scaler.fit_transform(X)
+# X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=42)
 
 def projection_simplex(v):
     if np.sum(v) <= 1 and np.all(v >= 0):

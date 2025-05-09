@@ -3,7 +3,7 @@ import numpy as np
 
 class Plotting:
     def __init__(self,precision=None,f1=None,accuracy=None,recall=None):
-        self.precision_dic = precision
+        self.precision_dict = precision
         self.f1_dict = f1
         self.accuracy_dict = accuracy
         self.recall_dict = recall

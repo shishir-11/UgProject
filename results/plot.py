@@ -46,3 +46,17 @@ class Plotting:
         plt.tight_layout()
         plt.show()
         
+    def acit(self,res_dict):
+        plt.figure(figsize=(10, 6))
+
+        # Plot the accuracy for each model
+        for model_name, accuracies in res_dict.items():
+            iterations = list(range(10, 51))  # Iterations from 10 to 50
+            plt.plot(iterations, accuracies, label=f'Accuracy for {model_name}')
+        
+        plt.xlabel('Iterations')
+        plt.ylabel('Accuracy')
+        plt.title('Accuracy vs. Iterations for Multiple Models (Iterations 10-50)')
+        plt.legend()
+        plt.grid(True)
+        plt.show()

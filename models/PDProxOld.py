@@ -7,7 +7,7 @@ class PDProxOld(Model):
         self.w = None
         self.alpha = None
 
-    def box_clipping(self, v, lower=0, upper=1):
+    def box_clipping(self, v, lower=0, upper=None):
         """Project vector v onto the box [lower, upper]"""
         if upper is None:
             upper = self.C
@@ -39,21 +39,16 @@ class PDProxOld(Model):
             G_w = -X.T @ (alpha * y) + self.lambda_ * (w / max(np.linalg.norm(w), 1e-10)) 
             G_alpha = 1 - y * (X @ w)  
             
-            # Update alpha using box clipping (Step 4 in the algorithm)
             alpha_new = self.box_clipping(beta + self.gamma * G_alpha)
             
-            # Update w (Step 5 in the algorithm)
             w_new = self.update_w(w, G_w, self.gamma, self.lambda_)
             
-            # Accumulate for averaging
             alpha_prev += alpha_new
             w_prev += w_new  
             
-            # Update current values
             w = w_new  
             alpha = alpha_new 
             
-            # Update beta using box clipping (Step 6 in the algorithm)
             beta = self.box_clipping(beta + self.gamma * G_alpha)
         
         # Average the results

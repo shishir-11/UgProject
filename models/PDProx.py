@@ -54,7 +54,7 @@ class PDProx(Model):
             beta = self.projection_simplex(beta + self.gamma * G_alpha)
         
         w = w_prev/self.iter
-        alpha = alpha_prev
+        alpha = alpha_prev/self.iter
         self.w = w
         self.alpha = alpha
 

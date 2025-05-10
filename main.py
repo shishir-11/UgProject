@@ -51,7 +51,7 @@ pdprox = PDProx.PDProx(X_train, y_train, gamma=params[0], lambda_=params[1], C=p
 pdprox.train()
 y_pred = pdprox.predict(X_test)
 results['PDProx'] = {m: metrics[m].get_score(y_test, y_pred) for m in metric_types}
-print("Weights less than tol: ",pdprox.weight_sparsity())
+print("Weights less than tolerance PDProx Simplex", pdprox.weight_sparsity())
 
 accuracies = {'PDProx': [], 'SVC': [],'PDProxOld':[]}
 acc = []
@@ -68,7 +68,6 @@ svc = SVC.SVC(X_train, y_train, gamma=params[0], lambda_=params[1], C=params[2],
 svc.train()
 y_pred = svc.predict(X_test)
 results['SVC'] = {m: metrics[m].get_score(y_test, y_pred) for m in metric_types}
-print(svc.support_vector_ratio())
 for i in range(10,51):
     svc = SVC.SVC(X_train, y_train, gamma=params[0], lambda_=params[1], C=params[2],iter=i)
     svc.train()
@@ -89,7 +88,8 @@ for i in range(10,51):
     y_pred = pdp.predict(X_test)
     res = metrics['accuracy'].get_score(y_test,y_pred)
     accuracies['PDProxOld'].append(res)
-print(pdp.weight_sparsity())
+
+print("Weights less than tolerance PDProx box clip", pdp.weight_sparsity())
 
 
 

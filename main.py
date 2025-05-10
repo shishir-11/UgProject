@@ -1,15 +1,18 @@
 from dataset.loader import LoadData
-from models import PDProx, PDProxOvR, SVC, LogReg
+from models import PDProx,PDProxOld, SVC, LogReg
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.model_selection import train_test_split
 import numpy as np
 from results.metric import LoadMetric
 from results.plot import Plotting
+import warnings
+from sklearn.exceptions import ConvergenceWarning
 
+warnings.filterwarnings("ignore", category=ConvergenceWarning)
 scaler = StandardScaler()
 # dataset = 'breast_cancer'
-# dataset = 'make_classification'
-dataset = 'ionosphere'
+dataset = 'make_classification'
+# dataset = 'ionosphere'
 loader = LoadData(scaler,dataset)
 X, y = loader.data , loader.target
 y = 2*y-1
@@ -50,25 +53,21 @@ y_pred = pdprox.predict(X_test)
 results['PDProx'] = {m: metrics[m].get_score(y_test, y_pred) for m in metric_types}
 print("Weights less than tol: ",pdprox.weight_sparsity())
 
-accuracies = {'PDProx': [], 'SVC': [], 'LogReg': []}
+accuracies = {'PDProx': [], 'SVC': [],'PDProxOld':[]}
 acc = []
 for i in range(10,51):
     pdprox = PDProx.PDProx(X_train, y_train, gamma=params[0], lambda_=params[1], C=params[2],iter=i)
     pdprox.train()
     y_pred = pdprox.predict(X_test)
     res = metrics['accuracy'].get_score(y_test,y_pred)
-    # acc.append(res)
     accuracies['PDProx'].append(res)
 
-# accuracies['iterations'] = list(range(10,51))
-# accuracies['PDProx'] = acc
 
 params = grid_search(SVC.SVC,iter=50)
 svc = SVC.SVC(X_train, y_train, gamma=params[0], lambda_=params[1], C=params[2],iter=50)
 svc.train()
 y_pred = svc.predict(X_test)
 results['SVC'] = {m: metrics[m].get_score(y_test, y_pred) for m in metric_types}
-# print(len(svc.model.support_) / len(X_train))
 print(svc.support_vector_ratio())
 for i in range(10,51):
     svc = SVC.SVC(X_train, y_train, gamma=params[0], lambda_=params[1], C=params[2],iter=i)
@@ -77,20 +76,21 @@ for i in range(10,51):
     res = metrics['accuracy'].get_score(y_test,y_pred)
     accuracies['SVC'].append(res)
 
-# accuracies['SVC'] = acc
-
-params = grid_search(LogReg.LogReg,iter=50)
-logreg = LogReg.LogReg(X_train, y_train, gamma=params[0], lambda_=params[1], C=params[2],iter=50)
-logreg.train()
-y_pred = logreg.predict(X_test)
-results['LogReg'] = {m: metrics[m].get_score(y_test, y_pred) for m in metric_types}
-
+params = grid_search(PDProxOld.PDProxOld,iter=50)
+pdp = PDProxOld.PDProxOld(X_train, y_train, gamma=params[0], lambda_=params[1], C=params[2],iter=50)
+pdp.train()
+y_pred = pdp.predict(X_test)
+results['PDProxOld'] = {m: metrics[m].get_score(y_test, y_pred) for m in metric_types}
+# print(len(svc.model.support_) / len(X_train))
+# print(svc.support_vector_ratio())
 for i in range(10,51):
-    logred = LogReg.LogReg(X_train, y_train, gamma=params[0], lambda_=params[1], C=params[2],iter=i)
-    logreg.train()
-    y_pred = logreg.predict(X_test)
+    pdp = PDProxOld.PDProxOld(X_train, y_train, gamma=params[0], lambda_=params[1], C=params[2],iter=i)
+    pdp.train()
+    y_pred = pdp.predict(X_test)
     res = metrics['accuracy'].get_score(y_test,y_pred)
-    accuracies['LogReg'].append(res)
+    accuracies['PDProxOld'].append(res)
+print(pdp.weight_sparsity())
+
 
 
 plotter = Plotting(
